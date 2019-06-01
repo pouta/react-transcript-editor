@@ -94,22 +94,22 @@ class WrapperBlock extends React.Component {
     }
 
     const speakerElement = <SpeakerLabel
-      name={ this.state.speaker }
-      handleOnClickEdit={ this.handleOnClickEdit }
+      name={this.state.speaker}
+      handleOnClickEdit={this.handleOnClickEdit}
     />;
 
-    const timecodeElement = <span className={ style.time } onClick={ this.handleTimecodeClick }>{shortTimecode(startTimecode)}</span>;
+    const timecodeElement = <span className={[style.time, style.noselect].join(' ')} onClick={this.handleTimecodeClick}>{shortTimecode(startTimecode)}</span>;
 
     return (
-      <div className={ style.WrapperBlock }>
-        <div className={ [ style.markers, style.unselectable ].join(' ') }
-          contentEditable={ false }>
+      <div className={style.WrapperBlock}>
+        <div className={[style.markers, style.unselectable].join(' ')}
+          contentEditable={false}>
           {this.props.blockProps.showSpeakers ? speakerElement : ''}
 
           {this.props.blockProps.showTimecodes ? timecodeElement : ''}
         </div>
-        <div className={ style.text }>
-          <EditorBlock { ...this.props } />
+        <div className={style.text}>
+          <EditorBlock {...this.props} />
         </div>
       </div>
     );

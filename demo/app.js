@@ -154,6 +154,10 @@ class App extends React.Component {
     this.setState({ fileName: value });
   };
 
+  exportHighlight = ({ startTime, endTime }) => {
+    console.log(startTime, endTime);
+  }
+
   render() {
     return (
       <div className={style.container}>
@@ -262,6 +266,7 @@ class App extends React.Component {
           handleAnalyticsEvents={this.handleAnalyticsEvents}
           title={this.state.title}
           ref={this.transcriptEditorRef}
+          exportHighlight={this.exportHighlight}
         />
 
         <label>Components Analytics</label>

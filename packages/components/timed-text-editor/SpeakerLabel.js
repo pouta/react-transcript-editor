@@ -9,10 +9,10 @@ import style from './WrapperBlock.module.css';
 class SpeakerLabel extends PureComponent {
   render() {
     return (
-      <span className={ style.speaker }
-        onClick={ this.props.handleOnClickEdit }>
-        <span className={ style.EditLabel }>
-          <FontAwesomeIcon icon={ faUserEdit } />
+      <span className={[style.speaker, style.noselect].join(' ')}
+        onClick={this.props.handleOnClickEdit}>
+        <span className={style.EditLabel}>
+          <FontAwesomeIcon icon={faUserEdit} />
         </span>
         {this.props.name}
       </span>

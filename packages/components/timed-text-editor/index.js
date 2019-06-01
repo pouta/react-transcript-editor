@@ -10,6 +10,11 @@ import {
   getDefaultKeyBinding,
   Modifier
 } from 'draft-js';
+import {
+  getSelectionText,
+  getSelectedBlocksList
+} from "draftjs-utils";
+
 
 import Word from './Word';
 import WrapperBlock from './WrapperBlock';
@@ -61,7 +66,7 @@ class TimedTextEditor extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       (prevState.transcriptData !== this.state.transcriptData)
-      && ( this.props.mediaUrl !== null && !this.isPresentInLocalStorage(this.props.mediaUrl) )
+      && (this.props.mediaUrl !== null && !this.isPresentInLocalStorage(this.props.mediaUrl))
     ) {
       this.loadData();
     }
@@ -93,7 +98,7 @@ class TimedTextEditor extends React.Component {
           const pauseWhileTypingIntervalInMilliseconds = 3000;
           // resets timeout
           clearTimeout(this.plauseWhileTypingTimeOut);
-          this.plauseWhileTypingTimeOut = setTimeout(function() {
+          this.plauseWhileTypingTimeOut = setTimeout(function () {
             // after timeout starts playing again
             this.props.playMedia(true);
           }.bind(this), pauseWhileTypingIntervalInMilliseconds);
@@ -156,9 +161,9 @@ class TimedTextEditor extends React.Component {
     }
 
     const data = convertToRaw(this.state.editorState.getCurrentContent());
-    localStorage.setItem(`draftJs-${ mediaUrlName }`, JSON.stringify(data));
+    localStorage.setItem(`draftJs-${mediaUrlName}`, JSON.stringify(data));
     const newLastLocalSavedDate = new Date().toString();
-    localStorage.setItem(`timestamp-${ mediaUrlName }`, newLastLocalSavedDate);
+    localStorage.setItem(`timestamp-${mediaUrlName}`, newLastLocalSavedDate);
 
     // return newLastLocalSavedDate;
   }
@@ -172,7 +177,7 @@ class TimedTextEditor extends React.Component {
         mediaUrlName = this.props.fileName;
       }
 
-      const data = localStorage.getItem(`draftJs-${ mediaUrlName }`);
+      const data = localStorage.getItem(`draftJs-${mediaUrlName}`);
       if (data !== null) {
         return true;
       }
@@ -188,9 +193,9 @@ class TimedTextEditor extends React.Component {
     if (mediaUrl.includes('blob')) {
       mediaUrlName = this.props.fileName;
     }
-    const data = JSON.parse(localStorage.getItem(`draftJs-${ mediaUrlName }`));
+    const data = JSON.parse(localStorage.getItem(`draftJs-${mediaUrlName}`));
     if (data !== null) {
-      const lastLocalSavedDate = localStorage.getItem(`timestamp-${ mediaUrlName }`);
+      const lastLocalSavedDate = localStorage.getItem(`timestamp-${mediaUrlName}`);
       this.setEditorContentState(data);
 
       return lastLocalSavedDate;
@@ -273,19 +278,19 @@ class TimedTextEditor extends React.Component {
     const rKey = 82;
     const tKey = 84;
 
-    if (e.keyCode === enterKey ) {
+    if (e.keyCode === enterKey) {
       return 'split-paragraph';
     }
     // if alt key is pressed in combination with these other keys
     if (e.altKey && ((e.keyCode === spaceKey)
-    || (e.keyCode === spaceKey)
-    || (e.keyCode === kKey)
-    || (e.keyCode === lKey)
-    || (e.keyCode === jKey)
-    || (e.keyCode === equalKey)
-    || (e.keyCode === minusKey)
-    || (e.keyCode === rKey)
-    || (e.keyCode === tKey))
+      || (e.keyCode === spaceKey)
+      || (e.keyCode === kKey)
+      || (e.keyCode === lKey)
+      || (e.keyCode === jKey)
+      || (e.keyCode === equalKey)
+      || (e.keyCode === minusKey)
+      || (e.keyCode === rKey)
+      || (e.keyCode === tKey))
     ) {
       e.preventDefault();
 
@@ -400,9 +405,9 @@ class TimedTextEditor extends React.Component {
     // number of char from selection point to end of paragraph
     const remainingCharNumber = lengthPlainTextForTheBlock - startSelectionOffsetKey;
     // if it's the last char in the paragraph - get previous entity
-    if (remainingCharNumber === 0 ) {
+    if (remainingCharNumber === 0) {
       isEndOfParagraph = true;
-      for (let j = lengthPlainTextForTheBlock; j > 0 ; j--) {
+      for (let j = lengthPlainTextForTheBlock; j > 0; j--) {
         entityKey = originalBlock.getEntityAt(j);
         if (entityKey !== null) {
           // if it finds it then return
@@ -413,7 +418,7 @@ class TimedTextEditor extends React.Component {
     // if it's first char or another within the block - get next entity
     else {
       let initialSelectionOffset = currentSelection.getStartOffset();
-      for (let i = 0; i < remainingCharNumber ; i++) {
+      for (let i = 0; i < remainingCharNumber; i++) {
         initialSelectionOffset += i;
         entityKey = originalBlock.getEntityAt(initialSelectionOffset);
         // if it finds it then return
@@ -468,12 +473,80 @@ class TimedTextEditor extends React.Component {
 
     if (currentWord.start !== 'NA') {
       if (this.props.isScrollIntoViewOn) {
-        const currentWordElement = document.querySelector(`span.Word[data-start="${ currentWord.start }"]`);
+        const currentWordElement = document.querySelector(`span.Word[data-start="${currentWord.start}"]`);
         currentWordElement.scrollIntoView({ block: 'nearest', inline: 'center' });
       }
     }
 
     return currentWord;
+  }
+
+  getStartEndFromWords = (words, firstWords, lastWords) => {
+    let startTime = 0;
+    let endTime = 0;
+
+    for (let i = 0; i < words.length; i++) {
+      if (
+        words[i].text.replace(/[.?!]/, '') === firstWords[0] &&
+        words[i + 1].text.replace(/[.?!]/, '') === firstWords[1] &&
+        words[i + 2].text.replace(/[.?!]/, '') === firstWords[2]
+      ) {
+        startTime = words[i].start;
+        break;
+      }
+    }
+
+    for (let k = words.length - 1; k >= 0; k--) {
+      if (
+        words[k].text.replace(/[.?!]/, '') === lastWords[2] &&
+        words[k - 1].text.replace(/[.?!]/, '') === lastWords[1] &&
+        words[k - 2].text.replace(/[.?!]/, '') === lastWords[0]
+      ) {
+        endTime = words[k].end;
+        break;
+      }
+    }
+
+    return {
+      startTime,
+      endTime
+    }
+  }
+
+  getCurrentSelection = () => {
+    const selectedText = getSelectionText(this.state.editorState);
+    let selectedWordsArray = selectedText.replace(/[.?!]/, ' ').split(' ');
+    if (selectedWordsArray.length < 6) {
+      throw new Error('Selection is too short');
+    }
+    selectedWordsArray = selectedWordsArray.filter(word => word === '' || word === ' ' ? false : true);
+
+    const firstWords = selectedWordsArray
+      .slice(0, 3)
+      .map(word => word.replace(/[.?!]/, ''));
+    const lastWords = selectedWordsArray
+      .slice(selectedWordsArray.length - 3, selectedWordsArray.length)
+      .map(word => word.replace(/[.?!]/, ''));
+
+    const blockList = getSelectedBlocksList(this.state.editorState);
+
+    if (blockList.size === 1) {
+      //Selection only spans one Block
+      const block = blockList.first().get('data');
+      const words = block.get('words');
+      var { startTime, endTime } = this.getStartEndFromWords(words, firstWords, lastWords);
+    } else {
+      //Selection is multi-block
+      let words = [];
+      for (let i = 0; i < blockList.size; i++) {
+        words.push(...blockList.get(i).get('data').get('words'));
+      }
+      var { startTime, endTime } = this.getStartEndFromWords(words, firstWords, lastWords);
+    }
+    this.props.exportHighlight({
+      startTime,
+      endTime
+    })
   }
 
   render() {
@@ -487,36 +560,39 @@ class TimedTextEditor extends React.Component {
 
     const editor = (
       <section
-        className={ style.editor }
-        onDoubleClick={ event => this.handleDoubleClick(event) }
-        // TODO: decide if on mobile want to have a way to "click" on words
-        // to play corresponding media
-        // a double tap would be the ideal solution
-        // onTouchStart={ event => this.handleDoubleClick(event) }
+        className={style.editor}
+        onDoubleClick={event => this.handleDoubleClick(event)}
+      // TODO: decide if on mobile want to have a way to "click" on words
+      // to play corresponding media
+      // a double tap would be the ideal solution
+      // onTouchStart={ event => this.handleDoubleClick(event) }
       >
+        <button onClick={this.getCurrentSelection}>
+          printSelection
+        </button>
         <style scoped>
-          {`span.Word[data-start="${ currentWord.start }"] { background-color: ${ highlightColour }; text-shadow: 0 0 0.01px black }`}
-          {`span.Word[data-start="${ currentWord.start }"]+span { background-color: ${ highlightColour } }`}
-          {`span.Word[data-prev-times~="${ Math.floor(time) }"] { color: ${ unplayedColor } }`}
-          {`span.Word[data-prev-times~="${ time }"] { color: ${ unplayedColor } }`}
-          {`span.Word[data-confidence="low"] { border-bottom: ${ correctionBorder } }`}
+          {`span.Word[data-start="${currentWord.start}"] { background-color: ${highlightColour}; text-shadow: 0 0 0.01px black }`}
+          {`span.Word[data-start="${currentWord.start}"]+span { background-color: ${highlightColour} }`}
+          {`span.Word[data-prev-times~="${Math.floor(time)}"] { color: ${unplayedColor} }`}
+          {`span.Word[data-prev-times~="${time}"] { color: ${unplayedColor} }`}
+          {`span.Word[data-confidence="low"] { border-bottom: ${correctionBorder} }`}
         </style>
 
         <Editor
-          editorState={ this.state.editorState }
-          onChange={ this.onChange }
+          editorState={this.state.editorState}
+          onChange={this.onChange}
           stripPastedStyles
-          blockRendererFn={ this.renderBlockWithTimecodes }
-          handleKeyCommand={ command => this.handleKeyCommand(command) }
-          keyBindingFn={ e => this.customKeyBindingFn(e) }
-          spellCheck={ this.props.spellCheck }
+          blockRendererFn={this.renderBlockWithTimecodes}
+          handleKeyCommand={command => this.handleKeyCommand(command)}
+          keyBindingFn={e => this.customKeyBindingFn(e)}
+          spellCheck={this.props.spellCheck}
         />
       </section>
     );
 
     return (
       <section>
-        { this.props.transcriptData !== null ? editor : null }
+        {this.props.transcriptData !== null ? editor : null}
       </section>
     );
   }

@@ -40,7 +40,8 @@ class TranscriptEditor extends React.Component {
       showTimecodes: true,
       showSpeakers: true,
       previewIsDisplayed: true,
-      mediaDuration: '00:00:00:00'
+      mediaDuration: '00:00:00:00',
+      exportHighlight: this.props.exportHighlight
       // previewViewWidth: '25'
     };
     this.timedTextEditorRef = React.createRef();
@@ -277,104 +278,105 @@ class TranscriptEditor extends React.Component {
   render() {
     const videoPlayer = (
       <VideoPlayer
-        mediaUrl={ this.props.mediaUrl }
-        onTimeUpdate={ this.handleTimeUpdate }
+        mediaUrl={this.props.mediaUrl}
+        onTimeUpdate={this.handleTimeUpdate}
         // onClick={ this.props.onClick }
-        videoRef={ this.videoRef }
-        previewIsDisplayed={ this.state.previewIsDisplayed }
-        onLoadedDataGetDuration={ this.onLoadedDataGetDuration }
-        // viewWith={ this.state.previewViewWidth }
+        videoRef={this.videoRef}
+        previewIsDisplayed={this.state.previewIsDisplayed}
+        onLoadedDataGetDuration={this.onLoadedDataGetDuration}
+      // viewWith={ this.state.previewViewWidth }
       />
     );
 
     const mediaControls = (
       <MediaPlayer
-        title={ this.props.title ? this.props.title : '' }
-        mediaDuration={ this.state.mediaDuration }
-        hookSeek={ foo => (this.setCurrentTime = foo) }
-        hookPlayMedia={ foo => (this.playMedia = foo) }
-        hookIsPlaying={ foo => (this.isPlaying = foo) }
-        rollBackValueInSeconds={ this.state.rollBackValueInSeconds }
-        timecodeOffset={ this.state.timecodeOffset }
+        title={this.props.title ? this.props.title : ''}
+        mediaDuration={this.state.mediaDuration}
+        hookSeek={foo => (this.setCurrentTime = foo)}
+        hookPlayMedia={foo => (this.playMedia = foo)}
+        hookIsPlaying={foo => (this.isPlaying = foo)}
+        rollBackValueInSeconds={this.state.rollBackValueInSeconds}
+        timecodeOffset={this.state.timecodeOffset}
         // hookOnTimeUpdate={ this.handleTimeUpdate }
-        mediaUrl={ this.props.mediaUrl }
+        mediaUrl={this.props.mediaUrl}
         // ref={ 'MediaPlayer' }
-        handleAnalyticsEvents={ this.props.handleAnalyticsEvents }
-        videoRef={ this.videoRef }
-        handleSaveTranscript={ this.handleSaveTranscript }
+        handleAnalyticsEvents={this.props.handleAnalyticsEvents}
+        videoRef={this.videoRef}
+        handleSaveTranscript={this.handleSaveTranscript}
       />
     );
 
     const settings = (
       <Settings
-        handleSettingsToggle={ this.handleSettingsToggle }
-        defaultValuePauseWhileTyping={ this.state.isPauseWhileTypingOn }
-        defaultValueScrollSync={ this.state.isScrollIntoViewOn }
-        defaultRollBackValueInSeconds={ this.state.rollBackValueInSeconds }
-        timecodeOffset={ this.state.timecodeOffset }
-        showTimecodes={ this.state.showTimecodes }
-        showSpeakers={ this.state.showSpeakers }
-        handlePauseWhileTyping={ this.handlePauseWhileTyping }
-        handleIsScrollIntoViewChange={ this.handleIsScrollIntoViewChange }
-        handleRollBackValueInSeconds={ this.handleRollBackValueInSeconds }
-        handleSetTimecodeOffset={ this.handleSetTimecodeOffset }
-        handleShowTimecodes={ this.handleShowTimecodes }
-        handleShowSpeakers={ this.handleShowSpeakers }
-        handleAnalyticsEvents={ this.props.handleAnalyticsEvents }
-        previewIsDisplayed={ this.state.previewIsDisplayed }
-        handlePreviewIsDisplayed={ this.handlePreviewIsDisplayed }
+        handleSettingsToggle={this.handleSettingsToggle}
+        defaultValuePauseWhileTyping={this.state.isPauseWhileTypingOn}
+        defaultValueScrollSync={this.state.isScrollIntoViewOn}
+        defaultRollBackValueInSeconds={this.state.rollBackValueInSeconds}
+        timecodeOffset={this.state.timecodeOffset}
+        showTimecodes={this.state.showTimecodes}
+        showSpeakers={this.state.showSpeakers}
+        handlePauseWhileTyping={this.handlePauseWhileTyping}
+        handleIsScrollIntoViewChange={this.handleIsScrollIntoViewChange}
+        handleRollBackValueInSeconds={this.handleRollBackValueInSeconds}
+        handleSetTimecodeOffset={this.handleSetTimecodeOffset}
+        handleShowTimecodes={this.handleShowTimecodes}
+        handleShowSpeakers={this.handleShowSpeakers}
+        handleAnalyticsEvents={this.props.handleAnalyticsEvents}
+        previewIsDisplayed={this.state.previewIsDisplayed}
+        handlePreviewIsDisplayed={this.handlePreviewIsDisplayed}
         // previewViewWidth={ this.state.previewViewWidth }
-        handleChangePreviewViewWidth={ this.handleChangePreviewViewWidth }
+        handleChangePreviewViewWidth={this.handleChangePreviewViewWidth}
       />
     );
 
     const shortcuts = (
-      <Shortcuts handleShortcutsToggle={ this.handleShortcutsToggle } />
+      <Shortcuts handleShortcutsToggle={this.handleShortcutsToggle} />
     );
 
     const timedTextEditor = (
       <TimedTextEditor
-        fileName={ this.props.fileName }
-        transcriptData={ this.state.transcriptData }
-        timecodeOffset={ this.state.timecodeOffset }
-        onWordClick={ this.handleWordClick }
-        playMedia={ this.handlePlayMedia }
-        isPlaying={ this.handleIsPlaying }
-        currentTime={ this.state.currentTime }
-        isEditable={ this.props.isEditable }
-        spellCheck={ this.props.spellCheck }
-        sttJsonType={ this.props.sttJsonType }
-        mediaUrl={ this.props.mediaUrl }
-        isScrollIntoViewOn={ this.state.isScrollIntoViewOn }
-        isPauseWhileTypingOn={ this.state.isPauseWhileTypingOn }
-        showTimecodes={ this.state.showTimecodes }
-        showSpeakers={ this.state.showSpeakers }
-        ref={ this.timedTextEditorRef }
-        handleAnalyticsEvents={ this.props.handleAnalyticsEvents }
+        fileName={this.props.fileName}
+        transcriptData={this.state.transcriptData}
+        timecodeOffset={this.state.timecodeOffset}
+        onWordClick={this.handleWordClick}
+        playMedia={this.handlePlayMedia}
+        isPlaying={this.handleIsPlaying}
+        currentTime={this.state.currentTime}
+        isEditable={this.props.isEditable}
+        spellCheck={this.props.spellCheck}
+        sttJsonType={this.props.sttJsonType}
+        mediaUrl={this.props.mediaUrl}
+        isScrollIntoViewOn={this.state.isScrollIntoViewOn}
+        isPauseWhileTypingOn={this.state.isPauseWhileTypingOn}
+        showTimecodes={this.state.showTimecodes}
+        showSpeakers={this.state.showSpeakers}
+        ref={this.timedTextEditorRef}
+        handleAnalyticsEvents={this.props.handleAnalyticsEvents}
+        exportHighlight={this.props.exportHighlight}
       />
     );
 
     const helpMessage = (
-      <div className={ style.helpMessage }>
+      <div className={style.helpMessage}>
         <span>
-          <FontAwesomeIcon className={ style.icon } icon={ faMousePointer } />
+          <FontAwesomeIcon className={style.icon} icon={faMousePointer} />
           Double click on a word or timestamp to jump to that point in the
           video.
         </span>
         <span>
-          <FontAwesomeIcon className={ style.icon } icon={ faICursor } />
+          <FontAwesomeIcon className={style.icon} icon={faICursor} />
           Start typing to edit text.
         </span>
         <span>
-          <FontAwesomeIcon className={ style.icon } icon={ faUserEdit } />
+          <FontAwesomeIcon className={style.icon} icon={faUserEdit} />
           You can add and change names of speakers in your transcript.
         </span>
         <span>
-          <FontAwesomeIcon className={ style.icon } icon={ faKeyboard } />
+          <FontAwesomeIcon className={style.icon} icon={faKeyboard} />
           Use keyboard shortcuts for quick control.
         </span>
         <span>
-          <FontAwesomeIcon className={ style.icon } icon={ faSave } />
+          <FontAwesomeIcon className={style.icon} icon={faSave} />
           Save & export to get a copy to your desktop.
         </span>
       </div>
@@ -382,64 +384,64 @@ class TranscriptEditor extends React.Component {
 
     const tooltip = (
       <Tooltip
-        className={ style.help }
-        content={ helpMessage }
-        fadeDuration={ 250 }
-        fadeEasing={ 'ease-in' }
-        placement={ 'bottom' }
-        radius={ 5 }
-        border={ '#ffffff' }
-        background={ '#f2f2f2' }
-        color={ '#000000' }
+        className={style.help}
+        content={helpMessage}
+        fadeDuration={250}
+        fadeEasing={'ease-in'}
+        placement={'bottom'}
+        radius={5}
+        border={'#ffffff'}
+        background={'#f2f2f2'}
+        color={'#000000'}
       >
-        <FontAwesomeIcon className={ style.icon } icon={ faQuestionCircle } />
+        <FontAwesomeIcon className={style.icon} icon={faQuestionCircle} />
         How does this work?
       </Tooltip>
     );
 
     const header = (
       <>
-        <header className={ style.header }>
+        <header className={style.header}>
           {this.state.showSettings ? settings : null}
           {this.state.showShortcuts ? shortcuts : null}
           {tooltip}
         </header>
-        <nav className={ style.nav }>
+        <nav className={style.nav}>
           {this.props.mediaUrl === null ? null : mediaControls}
         </nav>
-        <div className={ style.settingsContainer }>
+        <div className={style.settingsContainer}>
           <button
-            className={ style.settingsButton }
+            className={style.settingsButton}
             title="Settings"
-            onClick={ this.handleSettingsToggle }
+            onClick={this.handleSettingsToggle}
           >
-            <FontAwesomeIcon icon={ faCog } />
+            <FontAwesomeIcon icon={faCog} />
           </button>
           <button
-            className={ `${ style.settingsButton } ${
+            className={`${style.settingsButton} ${
               style.keyboardShortcutsButon
-            }` }
+              }`}
             title="view shortcuts"
-            onClick={ this.handleShortcutsToggle }
+            onClick={this.handleShortcutsToggle}
           >
-            <FontAwesomeIcon icon={ faKeyboard } />
+            <FontAwesomeIcon icon={faKeyboard} />
           </button>
         </div>
       </>
     );
 
     return (
-      <div className={ style.container }>
+      <div className={style.container}>
         {this.props.mediaUrl === null ? null : header}
 
-        <div className={ style.grid }>
-          <section className={ style.row }>
-            <aside className={ style.aside }>
+        <div className={style.grid}>
+          <section className={style.row}>
+            <aside className={style.aside}>
               {this.props.mediaUrl === null ? null : videoPlayer}
             </aside>
-            <main className={ style.main }>
+            <main className={style.main}>
               {this.props.mediaUrl !== null &&
-              this.props.transcriptData !== null
+                this.props.transcriptData !== null
                 ? timedTextEditor
                 : null}
             </main>
