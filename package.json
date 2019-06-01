@@ -1,7 +1,7 @@
 {
-  "name": "@bbc/react-transcript-editor",
+  "name": "@pouta/react-transcript-editor",
   "description": "A React component to make transcribing audio and video easier and faster.",
-  "version": "1.0.4",
+  "version": "1.0.1",
   "keywords": [
     "transcript",
     "transcriptions",
@@ -97,26 +97,11 @@
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },
-  "contributors": [
-    {
-      "name": "Pietro Passarelli",
-      "email": "pietro.passarelli@bbc.co.uk",
-      "url": "https://github.com/pietrop"
-    },
-    {
-      "name": "James Dooley",
-      "email": "james.dooley@bbc.co.uk",
-      "url": "https://github.com/jamesdools"
-    }
-  ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bbc/react-transcript-editor/issues"
-  },
-  "homepage": "https://github.com/bbc/react-transcript-editor",
+  "homepage": "https://github.com/pouta/react-transcript-editor",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bbc/react-transcript-editor.git"
+    "url": "git+https://github.com/pouta/react-transcript-editor.git"
   },
   "browserslist": [
     ">0.2%",
