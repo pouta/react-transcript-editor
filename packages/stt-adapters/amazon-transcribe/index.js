@@ -147,8 +147,6 @@ const amazonTranscribeToDraft = amazonTranscribeJson => {
     };
     results.push(draftJsContentBlockParagraph);
   });
-  console.log('paragraphs', wordsByParagraphs);
-  console.log('results', results);
   return results;
 };
 
